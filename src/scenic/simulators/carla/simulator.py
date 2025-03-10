@@ -24,6 +24,9 @@ import scenic.simulators.carla.utils.visuals as visuals
 from scenic.syntax.veneer import verbosePrint
 
 
+## Sincronizacion
+import sincronizacion
+
 class CarlaSimulator(DrivingSimulator):
     """Implementation of `Simulator` for CARLA."""
 
@@ -262,8 +265,13 @@ class CarlaSimulation(DrivingSimulation):
 
     def step(self):
         # Run simulation for one timestep
-        self.world.tick()
+        # self.world.tick()
 
+        sincronizacion.lidar_done.clear()
+        self.world.tick()
+        if not sincronizacion.lidar_done.wait(timeout=1.0):
+            print("No se obtuvo respuesta del sensor")
+            
         # Render simulation
         if self.render:
             self.cameraManager.render(self.display)
