@@ -268,8 +268,13 @@ class CarlaSimulation(DrivingSimulation):
         # self.world.tick()
 
         sincronizacion.lidar_done.clear()
+
+        if (sincronizacion.aplicar_control):
+            egoActor = self.objects[0].carlaActor
+            egoActor.apply_control(sincronizacion.controles_ego)
+
         self.world.tick()
-        if not sincronizacion.lidar_done.wait(timeout=1.0):
+        if not sincronizacion.lidar_done.wait(timeout=3):
             print("No se obtuvo respuesta del sensor")
             
         # Render simulation
